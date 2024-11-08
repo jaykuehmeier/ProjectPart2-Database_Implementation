@@ -14,6 +14,9 @@ GROUP BY t.topping_ID, t.topping_Name
 ORDER BY
    ToppingCount DESC,
    Topping ASC;
+
+
+-- ProfitbyPizza View (Now works)
 CREATE VIEW ProfitByPizza AS
 SELECT
     pizza_Size as Size,
@@ -27,7 +30,7 @@ GROUP BY
     MONTH(pizza_Date),
     YEAR(pizza_Date)
 ORDER BY
-    Profit DESC;
+    Profit ASC;
 
 
 -- ProfitByOrderType View
@@ -68,4 +71,3 @@ ORDER BY
 SELECT * FROM ToppingPopularity;
 SELECT * FROM ProfitByPizza;
 SELECT * FROM ProfitByOrderType;
-
