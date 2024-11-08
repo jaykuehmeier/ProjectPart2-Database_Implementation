@@ -284,3 +284,6 @@ INSERT INTO order_discount (ordertable_ID, discount_ID)
 SELECT o.ordertable_ID, d.discount_ID
 FROM ordertable o, discount d
 WHERE o.ordertable_Time = '2024-04-13 20:32:00' AND d.discount_Name = 'Employee';
+
+
+SELECT * FROM ToppingPopularity;

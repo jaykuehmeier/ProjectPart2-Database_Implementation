@@ -7,15 +7,17 @@ USE PizzaDB;
 -- Shows rank order of all toppings from most popular to least popular, accounting for extra toppings
 CREATE VIEW ToppingPopularity AS
 SELECT 
-    t.topping_Name,
-    COUNT(pt.topping_ID) as TimesOrdered,
-    CAST(COUNT(pt.topping_ID) * 100.0 / (SELECT COUNT(*) FROM pizza_topping) AS DECIMAL(5,2)) as PercentageOrdered,
-    SUM(CASE WHEN pt.pizza_topping_IsDouble = 1 THEN 1 ELSE 0 END) as TimesDouble
+    t.topping_Name as Topping,
+    COUNT(pt.topping_ID) + SUM(CASE WHEN pt.pizza_topping_IsDouble = 1 THEN 1 ELSE 0 END) as ToppingCount
 FROM topping t
 LEFT JOIN pizza_topping pt ON t.topping_ID = pt.topping_ID
 GROUP BY t.topping_ID, t.topping_Name
-ORDER BY TimesOrdered DESC, t.topping_Name;
+ORDER BY 
+    ToppingCount DESC,
+    Topping ASC;
 
+
+    
 -- ProfitByPizza View
 -- Shows profit by pizza size and crust type each month
 CREATE VIEW ProfitByPizza AS
@@ -81,3 +83,6 @@ ORDER BY
         WHEN 'delivery' THEN 3
         WHEN 'Total' THEN 4
     END;
+
+
+
