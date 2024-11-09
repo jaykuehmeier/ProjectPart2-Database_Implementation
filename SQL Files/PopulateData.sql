@@ -156,7 +156,7 @@ WHERE p.pizza_Date = '2024-03-03 21:30:00' AND t.topping_Name IN ('Regular Chees
 
 -- Order 4: April 20th Delivery (Andrew Wilkes-Krier)
 INSERT INTO ordertable (customer_ID, ordertable_Time, ordertable_Type, ordertable_Price, ordertable_Cost, ordertable_IsComplete)
-SELECT customer_ID, '2024-04-20 19:11:00', 'delivery', 86.19, 23.62, 1
+SELECT customer_ID, '2024-04-20 19:11:00', 'delivery', 67.95, 23.62, 1
 FROM customer WHERE customer_FName = 'Andrew' AND customer_LName = 'Wilkes-Krier';
 
 INSERT INTO delivery (ordertable_ID, delivery_HouseNum, delivery_Street, delivery_City, delivery_State, delivery_Zip, delivery_IsDelivered)
@@ -284,5 +284,7 @@ INSERT INTO order_discount (ordertable_ID, discount_ID)
 SELECT o.ordertable_ID, d.discount_ID
 FROM ordertable o, discount d
 WHERE o.ordertable_Time = '2024-04-13 20:32:00' AND d.discount_Name = 'Employee';
+
+
 
 

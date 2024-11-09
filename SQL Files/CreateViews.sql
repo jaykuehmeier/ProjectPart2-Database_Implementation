@@ -32,42 +32,45 @@ GROUP BY
 ORDER BY
     Profit ASC;
 
-
--- ProfitByOrderType View
 CREATE VIEW ProfitByOrderType AS
 WITH MonthlyProfits AS (
     SELECT
-        ordertable_Type as customerType,
-        CONCAT(MIN(MONTH(ordertable_Time)), '/', MIN(YEAR(ordertable_Time))) as OrderMonth,
-        CAST(SUM(ordertable_Price) AS DECIMAL(10,2)) as TotalOrderPrice,
-        CAST(SUM(ordertable_Cost) AS DECIMAL(10,2)) as TotalOrderCost,
-        CAST(SUM(ordertable_Price - ordertable_Cost) AS DECIMAL(10,2)) as Profit
+        ordertable_Type AS customerType,
+        CONCAT(MONTH(ordertable_Time), '/', YEAR(ordertable_Time)) AS OrderMonth,
+        CAST(SUM(ordertable_Price) AS DECIMAL(10,2)) AS TotalOrderPrice,
+        CAST(SUM(ordertable_Cost) AS DECIMAL(10,2)) AS TotalOrderCost,
+        CAST(SUM(ordertable_Price - ordertable_Cost) AS DECIMAL(10,2)) AS Profit
     FROM ordertable
     GROUP BY
         ordertable_Type,
-        MONTH(ordertable_Time),
-        YEAR(ordertable_Time)
-),
-TotalProfits AS (
-    SELECT
-        'Grand Total' as customerType,
-        '' as OrderMonth,
-        CAST(SUM(ordertable_Price) AS DECIMAL(10,2)) as TotalOrderPrice,
-        CAST(SUM(ordertable_Cost) AS DECIMAL(10,2)) as TotalOrderCost,
-        CAST(SUM(ordertable_Price - ordertable_Cost) AS DECIMAL(10,2)) as Profit
-    FROM ordertable
+        CONCAT(MONTH(ordertable_Time), '/', YEAR(ordertable_Time))
 )
-SELECT * FROM MonthlyProfits
-UNION ALL
-SELECT * FROM TotalProfits
+SELECT customerType, OrderMonth, TotalOrderPrice, TotalOrderCost, Profit
+FROM (
+    SELECT customerType, OrderMonth, TotalOrderPrice, TotalOrderCost, Profit
+    FROM MonthlyProfits
+    UNION ALL
+    SELECT
+        'Grand Total' AS customerType,
+        '' AS OrderMonth,
+        CAST(SUM(TotalOrderPrice) AS DECIMAL(10,2)) AS TotalOrderPrice,
+        CAST(SUM(TotalOrderCost) AS DECIMAL(10,2)) AS TotalOrderCost,
+        CAST(SUM(Profit) AS DECIMAL(10,2)) AS Profit
+    FROM MonthlyProfits
+) AS combined
 ORDER BY
-    CASE
-        WHEN customerType = 'Grand Total' THEN 2
-        ELSE 1
+    CASE customerType
+        WHEN 'dinein' THEN 1
+        WHEN 'pickup' THEN 2
+        WHEN 'delivery' THEN 3
+        ELSE 4
     END,
-    customerType,
-    OrderMonth;
+    CASE WHEN OrderMonth = '' THEN 1 ELSE 0 END,
+    OrderMonth ASC;
+
+
 
 SELECT * FROM ToppingPopularity;
 SELECT * FROM ProfitByPizza;
 SELECT * FROM ProfitByOrderType;
+
