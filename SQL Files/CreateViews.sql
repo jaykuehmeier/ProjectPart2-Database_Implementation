@@ -70,7 +70,4 @@ ORDER BY
 
 
 
-SELECT * FROM ToppingPopularity;
-SELECT * FROM ProfitByPizza;
-SELECT * FROM ProfitByOrderType;
 
